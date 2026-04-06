@@ -1,0 +1,19 @@
+{
+  "name": "digikala-automation-platform",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Digikala Automation Platform — Built on Activepieces core",
+  "scripts": {
+    "dev": "cd apps/activepieces && npm run dev",
+    "dev:backend": "cd apps/activepieces && npm run dev:backend",
+    "dev:frontend": "cd apps/activepieces && npm run serve:frontend",
+    "build": "cd apps/activepieces && npx turbo build",
+    "lint": "cd apps/activepieces && npm run lint-dev",
+    "create-piece": "cd apps/activepieces && npm run create-piece",
+    "build-piece": "cd apps/activepieces && npm run build-piece",
+    "docker:up": "docker compose up -d",
+    "docker:down": "docker compose down",
+    "docker:build": "docker compose build",
+    "docker:logs": "docker compose logs -f"
+  }
+}

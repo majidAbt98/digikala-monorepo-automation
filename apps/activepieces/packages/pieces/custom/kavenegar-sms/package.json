@@ -1,0 +1,16 @@
+{
+  "name": "@digikala/piece-kavenegar-sms",
+  "version": "0.1.0",
+  "description": "Activepieces integration for Kavenegar SMS provider (Iran)",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch"
+  },
+  "dependencies": {
+    "@activepieces/pieces-framework": "^0.36.1"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.0"
+  }
+}

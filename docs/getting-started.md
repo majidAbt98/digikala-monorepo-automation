@@ -1,91 +1,143 @@
 # Getting Started with Digikala Automation Platform
 
+## Architecture
+
+This monorepo contains the Digikala Automation Platform built on Activepieces core:
+
+```
+digikala-monorepo-automation/
+  apps/
+    activepieces/              # Activepieces core (forked)
+      packages/
+        web/                   # React UI (customized with Digikala branding + RTL)
+        server/api/            # Fastify backend API
+        server/worker/         # Background job worker
+        server/engine/         # Sandboxed flow execution engine
+        pieces/custom/         # Digikala custom pieces
+          digikala-order-api/  # Order management integration
+          kavenegar-sms/       # Iranian SMS via Kavenegar
+        pieces/community/      # 500+ community integrations
+        shared/                # Shared types and utilities
+  docs/                        # Project documentation
+  evaluation/                  # Migration evaluation documents
+  docker-compose.yml           # Local development with Docker
+  package.json                 # Root monorepo scripts
+```
+
 ## Prerequisites
 
-- Docker and Docker Compose
-- Node.js 18+ (for custom piece development)
-- Git
+- **Bun** 1.3+ (package manager used by Activepieces)
+- **Node.js** 24+ 
+- **Docker** and **Docker Compose** (for infrastructure)
+- **Git**
 
-## Quick Start
-
-### 1. Start the Platform
+## Quick Start (Docker — Recommended)
 
 ```bash
 # Clone the repository
 git clone https://github.com/majidAbt98/digikala-monorepo-automation.git
 cd digikala-monorepo-automation
 
-# Start all services
+# Start all services (app + PostgreSQL + Redis)
 docker compose up -d
 
 # Access the UI at http://localhost:8080
 ```
 
-### 2. Initial Setup
+## Development Mode (Local)
 
-1. Open http://localhost:8080 in your browser
+### 1. Start infrastructure
+
+```bash
+# Start only PostgreSQL and Redis
+docker compose up -d postgres redis
+```
+
+### 2. Install dependencies
+
+```bash
+cd apps/activepieces
+bun install
+```
+
+### 3. Set up environment
+
+```bash
+cp .env.dev .env
+# Edit .env with your local settings
+```
+
+### 4. Run the platform
+
+```bash
+# From the repo root:
+npm run dev          # Full stack (frontend + backend)
+# OR separately:
+npm run dev:frontend # React UI on http://localhost:4200
+npm run dev:backend  # API server on http://localhost:3000
+```
+
+### 5. Initial Setup
+
+1. Open http://localhost:4200 (dev) or http://localhost:8080 (Docker)
 2. Create an admin account
-3. Create your first project (e.g., "Digikala Operations")
+3. The UI is in Farsi (RTL) by default — switch to English via settings if needed
 
-### 3. Install Custom Pieces
+## Custom Pieces
 
-Custom Digikala pieces are in the `pieces/` directory:
+Digikala-specific pieces live in `apps/activepieces/packages/pieces/custom/`:
 
-- `pieces/digikala-order-api` — Order management integration
-- `pieces/kavenegar-sms` — Iranian SMS via Kavenegar
+| Piece | Description |
+|---|---|
+| `digikala-order-api` | Order management (get, list, new order trigger) |
+| `kavenegar-sms` | SMS via Kavenegar (send, verify, template) |
 
-To build and install a custom piece:
-
-```bash
-cd pieces/digikala-order-api
-npm install
-npm run build
-# Upload the built piece via the Activepieces admin panel
-```
-
-### 4. Create Your First Automation
-
-Example: "Notify customer when order ships"
-
-1. Create a new flow
-2. Add trigger: **Digikala Order API > New Order**
-3. Add action: **Kavenegar SMS > Send Template Message**
-4. Configure the SMS template with order details
-5. Test and publish
-
-## Development
-
-### Custom Piece Development
-
-See the [Activepieces Piece Development Guide](https://www.activepieces.com/docs/build-pieces/misc/build-piece) for the full framework documentation.
-
-Quick reference:
+### Creating a New Piece
 
 ```bash
-# Create a new piece
-mkdir -p pieces/my-piece/src/lib/actions
-mkdir -p pieces/my-piece/src/lib/triggers
-
-# Develop with hot-reload (when running in dev mode)
-cd pieces/my-piece
-npm run dev
+# From repo root
+npm run create-piece
+# Follow the prompts to scaffold a new piece
 ```
 
-### Environment Variables
+### Building a Piece
 
-| Variable | Description | Default |
-|---|---|---|
-| `AP_POSTGRES_PASSWORD` | PostgreSQL password | `activepieces_dev` |
-| `AP_ENCRYPTION_KEY` | 32-char encryption key | Change for production! |
-| `AP_JWT_SECRET` | JWT signing secret | Change for production! |
-| `AP_FRONTEND_URL` | Public-facing URL | `http://localhost:8080` |
+```bash
+npm run build-piece -- --name=digikala-order-api
+```
 
-## Production Deployment
+See [Custom Pieces Guide](./custom-pieces-guide.md) for detailed instructions.
 
-For production, ensure you:
+## Key Customizations
 
-1. Generate strong values for `AP_ENCRYPTION_KEY` and `AP_JWT_SECRET`
-2. Use a managed PostgreSQL instance
-3. Use a managed Redis instance
-4. Deploy behind a reverse proxy with TLS
-5. Set `AP_FRONTEND_URL` to your production domain
+### Digikala Branding
+- Theme colors: `apps/activepieces/packages/web/src/styles/digikala-theme.css`
+- Primary color: Digikala Red (#EF394E)
+- Secondary color: Teal (#00BFA5)
+
+### RTL Support
+- RTL stylesheet: `apps/activepieces/packages/web/src/styles/digikala-rtl.css`
+- HTML dir attribute: `<html lang="fa" dir="rtl">`
+- Code blocks and flow builder remain LTR
+
+### Farsi Translation
+- Translation file: `apps/activepieces/packages/web/public/locales/fa/translation.json`
+- Default language set to `fa` in `i18n.ts`
+- Locale enum updated in `packages/shared/src/lib/core/common/locale.ts`
+
+### Vazirmatn Font
+- Persian web font loaded from CDN (Vazirmatn by Saber Rastikerdar)
+- Applied automatically in RTL mode
+
+## Upstream Sync
+
+To pull updates from Activepieces upstream:
+
+```bash
+cd apps/activepieces
+git remote add upstream https://github.com/activepieces/activepieces.git
+git fetch upstream main
+# Cherry-pick or merge specific commits/tags
+```
+
+Keep customizations minimal in core files — prefer building features as custom pieces.

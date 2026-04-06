@@ -137,36 +137,57 @@ packages/
 | Make (Integromat) | Proprietary SaaS | 1,500+ | No | Limited | No self-hosting |
 | Custom build | N/A | 0 | Yes | Unlimited | Too expensive/slow |
 
-## 8. Migration Strategy
+## 8. Scalability Assessment
 
-### Phase 1: Proof of Concept (2-4 weeks)
-1. Deploy Activepieces via Docker internally
-2. Build 2-3 critical custom pieces (Order API + Kavenegar SMS)
-3. Create one end-to-end automation ("new order -> SMS notification")
-4. Evaluate performance and developer experience
+- **Base throughput**: 95 executions/sec per instance with sandboxing; up to ~4,750 exec/sec with unsandboxed mode (50x boost)
+- **Horizontal scaling**: Enterprise edition supports multiple worker instances behind a shared Redis queue
+- **Estimated Digikala need**: Assuming 1,000-5,000 automated workflow executions per minute during peak (order processing, inventory sync, notification dispatch), this requires 2-5 worker instances in unsandboxed mode or 10-50+ instances in sandboxed mode
+- **Database bottleneck**: PostgreSQL connection pooling (PgBouncer) and read replicas would be necessary at Digikala scale
+- **Verdict**: Feasible with Enterprise edition and proper Kubernetes autoscaling, but requires load testing with realistic Digikala workflow patterns before committing
 
-### Phase 2: RTL/Localization (2-4 weeks, parallel)
-1. Fork the repository
-2. Add RTL support to React UI
-3. Add Farsi translations
-4. Evaluate contributing back upstream
+## 9. Cost Estimate
 
-### Phase 3: Core Pieces Development (4-8 weeks)
-1. Build Priority 1 custom pieces
-2. Set up CI/CD for piece development
-3. Create internal piece development documentation
+| Item | One-Time | Annual Recurring |
+|---|---|---|
+| Enterprise License | -- | Custom pricing (est. $10-50K/year) |
+| Infrastructure (K8s, PostgreSQL, Redis) | $5-10K setup | $2-5K/month (~$24-60K/year) — likely absorbed by DigiCloud |
+| Custom Pieces Development (Tiers 1-3) | 2-3 engineers x 6 months | 1 engineer ongoing maintenance |
+| RTL/Farsi Localization | 2 engineers x 5 weeks | Minor ongoing |
+| Platform Operations | -- | 1-2 engineers ongoing |
+| **Total Engineering Investment** | ~15-20 engineer-months | ~3-4 engineers ongoing |
 
-### Phase 4: Production Rollout (2-4 weeks)
-1. Deploy to production Kubernetes cluster
-2. Migrate initial workflows
-3. Train operations teams on visual builder
-4. Set up monitoring and alerting
+Compared to building from scratch (estimated 80-120 engineer-months initial + 6-8 engineers ongoing), Activepieces adoption saves roughly **65-100 engineer-months** in the first year.
 
-### Phase 5: Scale and Extend (Ongoing)
-1. Build Priority 2 and 3 pieces
-2. Onboard more departments
-3. Maintain fork, selectively merge upstream
+## 10. Migration Strategy
+
+### Phase 0: Proof of Concept (Weeks 1-4)
+1. Deploy Activepieces Community Edition on Kubernetes
+2. Build one high-value internal workflow (e.g., order anomaly detection -> Slack notification)
+3. Prototype RTL support on the dashboard page
+4. Load test with simulated Digikala-scale traffic
+5. **Go/No-Go decision at end of Phase 0**
+
+### Phase 1: Foundation (Weeks 5-12)
+1. Negotiate and procure Enterprise license (or implement community-grade SSO/RBAC alternatives)
+2. Complete RTL/Farsi localization
+3. Build Tier 1 pieces (Internal Platform, Payment Gateways, SMS)
+4. Deploy production-grade Kubernetes cluster with separate API/Worker/Engine pods
+5. Onboard first team (Operations) with 5-10 initial workflows
+
+### Phase 2: Expansion (Months 4-6)
+1. Build Tier 2 pieces (DigiPay, Logistics, Calendar)
+2. Onboard Marketing, Customer Support, and Seller Operations teams
+3. Establish internal "Digikala Pieces" npm registry and CI/CD pipeline
+4. Implement monitoring/alerting with existing observability stack
+5. Target: 50+ active workflows, 3-5 teams
+
+### Phase 3: Scale (Months 7-12)
+1. Build Tier 3 pieces based on demand
+2. Optimize performance (caching, connection pooling, worker autoscaling)
+3. Evaluate AI agent capabilities for intelligent routing and decision-making workflows
+4. Contribute RTL support and generic pieces upstream
+5. Target: 200+ active workflows, organization-wide adoption
 
 ---
 
-**Bottom line**: Activepieces gives Digikala 80%+ of what's needed out of the box. The remaining 20% (Iranian integrations, RTL, Farsi) is buildable with the platform's extensibility. Building from scratch would cost 5-10x more.
+**Bottom line**: Activepieces gives Digikala 80%+ of what's needed out of the box. The remaining 20% (Iranian integrations, RTL, Farsi) is buildable with the platform's extensibility. Building from scratch would cost 5-10x more time and effort — roughly 65-100 engineer-months saved in the first year alone. The critical success factor is Phase 0: a focused 4-week PoC that validates performance at Digikala scale and confirms RTL localization is tractable.
