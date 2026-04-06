@@ -1,0 +1,69 @@
+/* Digikala Brand Theme Overrides */
+
+/* Digikala brand colors:
+   Primary: #EF394E (Digikala Red)
+   Secondary: #00BFA5 (Teal/Green for actions)
+   Dark: #3F3F3F
+   Light background: #F5F5F5
+*/
+
+:root {
+  /* Override Activepieces primary with Digikala Red */
+  --primary: 351 86% 58%;         /* #EF394E */
+  --primary-foreground: 0 0% 100%;
+
+  /* Ring/focus color */
+  --ring: 351 86% 58%;
+
+  /* Digikala secondary */
+  --secondary: 169 100% 37%;       /* #00BFA5 */
+  --secondary-foreground: 0 0% 100%;
+
+  /* Accent color — lighter variant of primary */
+  --accent: 351 86% 95%;
+  --accent-foreground: 351 86% 45%;
+
+  /* Digikala-specific custom properties */
+  --digikala-red: #EF394E;
+  --digikala-teal: #00BFA5;
+  --digikala-dark: #3F3F3F;
+  --digikala-light-bg: #F5F5F5;
+  --digikala-orange: #FF6D00;
+  --digikala-blue: #0073CF;
+}
+
+/* Dark mode overrides */
+.dark {
+  --primary: 351 86% 55%;
+  --primary-foreground: 0 0% 100%;
+  --ring: 351 86% 55%;
+  --secondary: 169 100% 40%;
+  --secondary-foreground: 0 0% 100%;
+  --accent: 351 40% 20%;
+  --accent-foreground: 351 86% 80%;
+}
+
+/* Vazirmatn font for Farsi support */
+@font-face {
+  font-display: swap;
+  font-family: 'Vazirmatn';
+  font-style: normal;
+  font-weight: 400;
+  src: url('https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/fonts/webfonts/Vazirmatn-Regular.woff2') format('woff2');
+}
+
+@font-face {
+  font-display: swap;
+  font-family: 'Vazirmatn';
+  font-style: normal;
+  font-weight: 500;
+  src: url('https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/fonts/webfonts/Vazirmatn-Medium.woff2') format('woff2');
+}
+
+@font-face {
+  font-display: swap;
+  font-family: 'Vazirmatn';
+  font-style: normal;
+  font-weight: 700;
+  src: url('https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/fonts/webfonts/Vazirmatn-Bold.woff2') format('woff2');
+}

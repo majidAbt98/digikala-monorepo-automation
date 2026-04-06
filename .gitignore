@@ -1,5 +1,12 @@
 node_modules/
 dist/
 .env
+.env.local
 *.tgz
 .DS_Store
+.turbo/
+tmp/
+.pnpm-store/
+.npm-cache/
+coverage/
+*.log

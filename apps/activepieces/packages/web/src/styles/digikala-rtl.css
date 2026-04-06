@@ -1,0 +1,107 @@
+/* Digikala RTL (Right-to-Left) Support for Farsi/Persian */
+
+/* Base RTL direction */
+[dir='rtl'] {
+  direction: rtl;
+  text-align: right;
+}
+
+/* Font family for Farsi — Vazirmatn is the standard Persian web font */
+[dir='rtl'] body {
+  font-family: 'Vazirmatn', 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+/* Flip horizontal paddings and margins for RTL */
+[dir='rtl'] .pl-1 { padding-left: 0; padding-right: 0.25rem; }
+[dir='rtl'] .pl-2 { padding-left: 0; padding-right: 0.5rem; }
+[dir='rtl'] .pl-3 { padding-left: 0; padding-right: 0.75rem; }
+[dir='rtl'] .pl-4 { padding-left: 0; padding-right: 1rem; }
+[dir='rtl'] .pr-1 { padding-right: 0; padding-left: 0.25rem; }
+[dir='rtl'] .pr-2 { padding-right: 0; padding-left: 0.5rem; }
+[dir='rtl'] .pr-3 { padding-right: 0; padding-left: 0.75rem; }
+[dir='rtl'] .pr-4 { padding-right: 0; padding-left: 1rem; }
+
+[dir='rtl'] .ml-1 { margin-left: 0; margin-right: 0.25rem; }
+[dir='rtl'] .ml-2 { margin-left: 0; margin-right: 0.5rem; }
+[dir='rtl'] .ml-3 { margin-left: 0; margin-right: 0.75rem; }
+[dir='rtl'] .ml-4 { margin-left: 0; margin-right: 1rem; }
+[dir='rtl'] .ml-auto { margin-left: 0; margin-right: auto; }
+[dir='rtl'] .mr-1 { margin-right: 0; margin-left: 0.25rem; }
+[dir='rtl'] .mr-2 { margin-right: 0; margin-left: 0.5rem; }
+[dir='rtl'] .mr-3 { margin-right: 0; margin-left: 0.75rem; }
+[dir='rtl'] .mr-4 { margin-right: 0; margin-left: 1rem; }
+[dir='rtl'] .mr-auto { margin-right: 0; margin-left: auto; }
+
+/* Flip text alignment */
+[dir='rtl'] .text-left { text-align: right; }
+[dir='rtl'] .text-right { text-align: left; }
+
+/* Flip flex row direction */
+[dir='rtl'] .flex-row { flex-direction: row-reverse; }
+[dir='rtl'] .flex-row-reverse { flex-direction: row; }
+
+/* Flip space-x utilities */
+[dir='rtl'] .space-x-1 > :not([hidden]) ~ :not([hidden]) {
+  margin-left: 0;
+  margin-right: 0.25rem;
+}
+[dir='rtl'] .space-x-2 > :not([hidden]) ~ :not([hidden]) {
+  margin-left: 0;
+  margin-right: 0.5rem;
+}
+[dir='rtl'] .space-x-3 > :not([hidden]) ~ :not([hidden]) {
+  margin-left: 0;
+  margin-right: 0.75rem;
+}
+[dir='rtl'] .space-x-4 > :not([hidden]) ~ :not([hidden]) {
+  margin-left: 0;
+  margin-right: 1rem;
+}
+
+/* Flip absolute/fixed positioning for RTL */
+[dir='rtl'] .left-0 { left: auto; right: 0; }
+[dir='rtl'] .right-0 { right: auto; left: 0; }
+[dir='rtl'] .left-2 { left: auto; right: 0.5rem; }
+[dir='rtl'] .right-2 { right: auto; left: 0.5rem; }
+[dir='rtl'] .left-4 { left: auto; right: 1rem; }
+[dir='rtl'] .right-4 { right: auto; left: 1rem; }
+
+/* Flip border radius for RTL */
+[dir='rtl'] .rounded-l { border-radius: 0 0.25rem 0.25rem 0; }
+[dir='rtl'] .rounded-r { border-radius: 0.25rem 0 0 0.25rem; }
+[dir='rtl'] .rounded-l-md { border-radius: 0 0.375rem 0.375rem 0; }
+[dir='rtl'] .rounded-r-md { border-radius: 0.375rem 0 0 0.375rem; }
+
+/* Flip border sides */
+[dir='rtl'] .border-l { border-left: none; border-right: 1px solid; }
+[dir='rtl'] .border-r { border-right: none; border-left: 1px solid; }
+
+/* Sidebar should appear on the right side for RTL */
+[dir='rtl'] .sidebar {
+  left: auto;
+  right: 0;
+}
+
+/* Flip transform translations */
+[dir='rtl'] .translate-x-full { transform: translateX(-100%); }
+[dir='rtl'] .-translate-x-full { transform: translateX(100%); }
+
+/* Flip icons that indicate direction (arrows, chevrons) */
+[dir='rtl'] .icon-flip,
+[dir='rtl'] [data-icon-flip='true'] {
+  transform: scaleX(-1);
+}
+
+/* Ensure code blocks remain LTR (code is always LTR) */
+[dir='rtl'] code,
+[dir='rtl'] pre,
+[dir='rtl'] .code-editor,
+[dir='rtl'] .cm-editor {
+  direction: ltr;
+  text-align: left;
+}
+
+/* Flow builder canvas — keep LTR since node connections are directional */
+[dir='rtl'] .react-flow {
+  direction: ltr;
+}
