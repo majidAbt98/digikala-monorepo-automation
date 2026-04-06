@@ -1,0 +1,81 @@
+version: "3.8"
+
+# Activepieces local development setup for Digikala
+# Usage: docker compose up -d
+
+services:
+  activepieces:
+    image: activepieces/activepieces:latest
+    container_name: digikala-activepieces
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      # Server
+      AP_ENGINE_EXECUTABLE_PATH: dist/packages/engine/main.js
+      AP_SANDBOX_RUN_MODE: THREADS
+      AP_ENVIRONMENT: prod
+
+      # Database
+      AP_POSTGRES_DATABASE: activepieces
+      AP_POSTGRES_HOST: postgres
+      AP_POSTGRES_PORT: "5432"
+      AP_POSTGRES_USERNAME: activepieces
+      AP_POSTGRES_PASSWORD: ${AP_POSTGRES_PASSWORD:-activepieces_dev}
+
+      # Redis
+      AP_REDIS_HOST: redis
+      AP_REDIS_PORT: "6379"
+
+      # Encryption key (generate a new one for production)
+      AP_ENCRYPTION_KEY: ${AP_ENCRYPTION_KEY:-change-me-in-production-32chars!}
+
+      # JWT secret (generate a new one for production)
+      AP_JWT_SECRET: ${AP_JWT_SECRET:-change-me-in-production-jwt-sec}
+
+      # Frontend URL
+      AP_FRONTEND_URL: ${AP_FRONTEND_URL:-http://localhost:8080}
+
+      # Telemetry (disabled for self-hosted)
+      AP_TELEMETRY_ENABLED: "false"
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: digikala-activepieces-postgres
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: activepieces
+      POSTGRES_USER: activepieces
+      POSTGRES_PASSWORD: ${AP_POSTGRES_PASSWORD:-activepieces_dev}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U activepieces"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: digikala-activepieces-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
+  redis_data:
